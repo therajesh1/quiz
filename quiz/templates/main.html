@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Portal</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .question-form {
+        margin-bottom: 20px;
+      }
+      .question-form label,
+      .question-form input,
+      .question-form textarea {
+        display: block;
+        margin-bottom: 10px;
+      }
+      .question-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .question-item button {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .question-item button:hover {
+        background-color: #ff1a1a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heading">
+        <h1>Admin Portal</h1>
+      </div>
+      <div class="question-form">
+        <label for="question">Question:</label>
+        <textarea id="question" rows="3"></textarea>
+
+        <label for="type">Type:</label>
+        <select id="type">
+          <option value="mcq">MCQ</option>
+          <option value="numeric">Numeric</option>
+        </select>
+
+        <div id="mcq-options">
+          <label for="option1">Option 1:</label>
+          <input type="text" id="option1" />
+
+          <label for="option2">Option 2:</label>
+          <input type="text" id="option2" />
+
+          <label for="option3">Option 3:</label>
+          <input type="text" id="option3" />
+
+          <label for="option4">Option 4:</label>
+          <input type="text" id="option4" />
+
+          <label for="answer">Correct Option (1-4):</label>
+          <input type="number" id="answer" min="1" max="4" />
+        </div>
+
+        <div id="numeric-value" style="display: none;">
+          <label for="numAns">Correct Answer:</label>
+          <input type="number" id="numAns" />
+        </div>
+
+        <button onclick="addQuestion()">Add Question</button>
+      </div>
+      <h2>Questions</h2>
+      <ul id="questionList"></ul>
+      <a href="/loginuser" role="button"> Log Out</a>
+
+    </div>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      button{
+        margin-top: 50px;
+        width: 100%;
+        background-color: #ffffff;
+        color: black;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+      .heading {
+        text-align: center;
+        color: white;
+        background-color: black;
+        border-radius: 0.5rem;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(48, 12, 70);
+      }
+      .container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        min-height: 45vh;
+        width: 45vh;
+      }
+      button {
+        margin-top: 50px;
+        width: 100%;
+        background-color: #ffffff;
+        color: black;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+
+    <script>
+      let questions = JSON.parse(localStorage.getItem('questions')) || [] //if there is no question then it will return a null array
+      
+      document.getElementById('type').addEventListener('change', function () {
+        const mcqOptions = document.getElementById('mcq-options')
+        const numAns = document.getElementById('numeric-value')
+        if (this.value === 'mcq') {
+          mcqOptions.style.display = 'block'
+          numAns.style.display = 'none'
+        } else {
+          mcqOptions.style.display = 'none'
+          numAns.style.display = 'block'
+        }
+      })
+      
+      function addQuestion() {
+        const questionText = document.getElementById('question').value
+        const type = document.getElementById('type').value
+        let correctAnswer
+      
+        if (type === 'mcq') {
+          correctAnswer = parseInt(document.getElementById('answer').value)
+          const options = [document.getElementById('option1').value, document.getElementById('option2').value, document.getElementById('option3').value, document.getElementById('option4').value]
+          questions.push({ question: questionText, type, options, correctAnswer })
+        } else {
+          correctAnswer = parseInt(document.getElementById('numAns').value)
+          questions.push({ question: questionText, type, correctAnswer })
+        }
+      
+        localStorage.setItem('questions', JSON.stringify(questions))
+        displayQuestions()
+      }
+      
+      function deleteQuestion(index) {
+        questions.splice(index, 1)
+        localStorage.setItem('questions', JSON.stringify(questions))
+        displayQuestions()
+      }
+      
+      function displayQuestions() {
+        const questionList = document.getElementById('questionList')
+        questionList.innerHTML = ''
+        questions.forEach((q, index) => {
+          const li = document.createElement('li')
+          li.classList.add('question-item')
+          li.textContent = `${index + 1}. ${q.question}`
+      
+          const deleteButton = document.createElement('button')
+          deleteButton.textContent = 'Delete'
+          deleteButton.onclick = () => deleteQuestion(index)
+      
+          li.appendChild(deleteButton)
+          questionList.appendChild(li)
+        })
+      }
+      
+      displayQuestions()
+    </script>
+  </body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(48, 12, 70);
+  }
+  .container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    min-height: 45vh;
+    width: 45vh;
+  }
+  button {
+    margin-top: 50px;
+    width: 100%;
+    background-color: #ffffff;
+    color: black;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>

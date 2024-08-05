@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(48, 12, 70);
+}
+.container{
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    min-height: 45vh;
+    width: 45vh;
+}
+.heading{
+    background-color: rgb(12, 13, 14);
+    border-radius: 0.25rem;
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+.second-heading{
+    text-align: center;
+    color: white;
+    background-color: black;
+    border-radius: 0.75rem;
+    height: 2rem;
+    
+}

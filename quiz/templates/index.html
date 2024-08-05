@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User - Take Quiz</title>
+    <link href="style.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="subheading">
+        <div class="heading">
+            <h1> Quiz</h1>
+        </div>
+    </div>
+        <div id="quiz"></div>
+        <div class="second-heading">
+            <h2>Live Score: <span id="score">0</span></h2>
+        </div>
+
+    </div>
+
+    <script >
+        let questions = JSON.parse(localStorage.getItem('questions')) || [];
+let score = 0;
+
+function displayQuiz() {
+    const quizDiv = document.getElementById('quiz');
+    questions.forEach((q, index) => {
+        const div = document.createElement('div');
+        div.classList.add('question');
+        const questionText = document.createElement('p');
+        questionText.textContent = `${index + 1}. ${q.question}`;
+        div.appendChild(questionText);
+
+        if (q.type === 'mcq') {
+            q.options.forEach((option, optIndex) => {
+                const label = document.createElement('label');
+                label.textContent = option;
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = `question${index}`;
+                input.value = optIndex + 1;
+                input.addEventListener('change', () => checkAnswer(index, optIndex + 1));
+                div.appendChild(input);
+                div.appendChild(label);
+                div.appendChild(document.createElement('br'));
+            });
+        } else {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.addEventListener('input', (e) => checkAnswer(index, parseInt(e.target.value)));
+            div.appendChild(input);
+        }
+        quizDiv.appendChild(div);
+    });
+}
+
+function checkAnswer(questionIndex, selectedAnswer) {
+    const question = questions[questionIndex];
+    if (question.type === 'mcq' && question.correctAnswer === selectedAnswer) {
+        score++;
+    } else if (question.type === 'numeric' && question.correctAnswer === selectedAnswer) {
+        score++;
+    }
+    document.getElementById('score').textContent = score;
+}
+
+displayQuiz();
+
+    </script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .subheading{
+            padding: 1rem;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(48, 12, 70);
+        }
+        .container{
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            min-height: 45vh;
+            width: 45vh;
+        }
+        .heading{
+            background-color: rgb(12, 13, 14);
+            border-radius: 0.25rem;
+            color: white;
+            width: 100%;
+            text-align: center;
+            
+        }
+        .second-heading{
+            text-align: center;
+            color: white;
+            background-color: black;
+            border-radius: 0.75rem;
+            height: 2rem;
+            padding: 0.5rem;
+
+            
+        }
+        button{
+            margin-top: 50px;
+            width: 100%;
+            background-color: #ffffff;
+            color: black;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
